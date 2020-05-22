@@ -7,7 +7,7 @@ const sql = require('mssql')
 const config = {
     user: 'wmsuser',
     password: 'wmsuser',
-    server: 'localhost',
+    server: 'localhost:1433',
     database: 'wms',
     options: {
         encrypt: false,
