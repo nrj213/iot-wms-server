@@ -20,3 +20,16 @@ exports.findAll = () => {
    })
 }
 
+exports.findMunicipalityIdIdByAreaId = (areaId) => {
+   const query = `SELECT 
+                     [municipality_id] as municipalityId
+                  FROM [wms].[wmsuser].[area]
+                  WHERE [area_id] = ${areaId}`
+
+   return new Promise((resolve, reject) => {
+      db.executeQuery(query)
+         .then(result => resolve(result.recordset))
+         .catch(error => reject(new Exception('Failed to get municipality ID corresponding to area code from DB', MessageCodes.DB_QUERY_FAILED)))
+   })
+}
+

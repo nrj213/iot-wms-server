@@ -12,3 +12,11 @@ exports.getAllMunicipalities = () => {
             .catch(err => reject(err))
     })
 }
+
+exports.getMunicipalityIdByAreaId = (areaId) => {
+    return new Promise((resolve, reject) => {
+        municipalityDao.findMunicipalityIdIdByAreaId(areaId)
+            .then(response => resolve(new Response(response)))
+            .catch(err => reject(err))
+    })
+}
