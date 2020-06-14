@@ -4,6 +4,7 @@ const binRouter = require('./routes/bin.router')
 const municipalityRouter = require('./routes/municipality.router')
 const areaRouter = require('./routes/area.router')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -11,6 +12,11 @@ const app = express()
  * Enabling cross origin requests support
  */
 app.use(cors())
+
+/**
+ * Parse application/json request body
+ */
+app.use(bodyParser.json())
 
 /**
  * Express configuration

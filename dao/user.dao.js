@@ -13,11 +13,13 @@ exports.findUserByUsernameAndPassword = (username, password) => {
                         ,currentUserTable.[user_role_id] as roleId
                         ,roleTable.[name] as roleName
                         ,currentUserTable.[area_id] as areaId
+                        ,currentUserTable.[staff_id] as staffId
                         FROM (SELECT 
                                  [name]
                                 ,[user_status_id]
                                 ,[user_role_id]
                                 ,[area_id]
+                                ,[staff_id]
                                 FROM [wms].[wmsuser].[user] usertable
                                 WHERE usertable.[username] = '${username}' AND usertable.[password] = '${password}' AND usertable.[user_status_id] = 1) currentUserTable
                                 JOIN [wms].[wmsuser].[user_role] roleTable

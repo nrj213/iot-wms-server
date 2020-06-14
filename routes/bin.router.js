@@ -10,5 +10,6 @@ var router = express.Router()
 router.get('/', binController.getAllBins)
 router.get('/:municipality', binController.getBinsByMunicipality)
 router.get('/:municipality/:area', binController.getBinsByMunicipalityAndArea)
+router.put('/collected', binController.markCollection)
 
 module.exports = router

@@ -36,3 +36,23 @@ exports.getBinsByMunicipalityAndArea = (req, res) => {
         .then(data => res.json(data))
         .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
 }
+
+exports.markCollection = (req, res) => {
+    const body = req.body
+    const binId = body['bin-id']
+    const staffId = body['staff-id']
+
+    if(binId == undefined || staffId == undefined) {
+        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing Bin ID or Staff ID in request body'))
+        return
+    }
+
+    if (isNaN(binId) || isNaN(staffId)) {
+        res.json(new ErrorResponse(MessageCodes.PARAMATER_TYPE_MISMATCH, 'Bin ID / Staff ID passed is not if type integer'))
+        return
+    }
+
+    binService.markCollection(binId, staffId)
+        .then(data => res.json(data))
+        .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
+}

@@ -125,3 +125,26 @@ exports.findByMunicipalityAndArea = (municipalityId, areaId) => {
    })
 }
 
+exports.markCollection = (binId, staffId) => {
+   const query = `INSERT INTO [wmsuser].[bin_status]
+                              ([bin_id],[waste_level])
+                        VALUES
+                              (${binId}, 0)`
+   return new Promise((resolve, reject) => {
+      db.executeQuery(query)
+         .then(result => {
+            if(result['rowsAffected'][0] > 0) {
+               const query = `INSERT INTO [wmsuser].[collection_records]
+                                          ([bin_id], [staff_id])
+                                    VALUES
+                                          (${binId}, ${staffId})`
+                  db.executeQuery(query)
+                     .then(result => resolve(result['rowsAffected'][0]))
+                     .catch(error => reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error)))
+            } else {
+               reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error))
+            }
+         })
+         .catch(error => reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}

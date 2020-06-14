@@ -28,3 +28,11 @@ exports.getAllBinsByMunicipalityAndArea = (municipalityId, areaId) => {
             .catch(err => reject(err))
     })
 }
+
+exports.markCollection = (binId, staffId) => {
+    return new Promise((resolve, reject) => {
+        binDao.markCollection(binId, staffId)
+            .then(response => resolve(new Response(response)))
+            .catch(err => reject(err))
+    })
+}
