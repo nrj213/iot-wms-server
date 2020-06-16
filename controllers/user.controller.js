@@ -11,6 +11,7 @@ exports.getUserByUsernameAndPassword = (req, res) => {
 
     if (!(username && password)) {
         res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Username or password missing'))
+        return
     }
 
     userService.getUserByUsernameAndPassword(username, password)

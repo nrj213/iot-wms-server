@@ -8,26 +8,32 @@ const { Exception } = require('../payload/exception')
 
 exports.findAll = () => {
    const query = `SELECT 
-                      binarea.[bin_id] as id
-                     ,binarea.[municipality_id] as [municipalityId]
+                     binareastaff.[bin_id] as id
+                     ,binareastaff.[municipality_id] as [municipalityId]
                      ,mun.[name] as [municipality]
-                     ,binarea.[area_id] as [areaId]
-                     ,binarea.[name] as [area]
-                     ,binarea.[latitude]
-                     ,binarea.[longitude]
-                     ,binarea.[staff_name] as [staffName]
-                     ,binarea.[staff_mobile_no] as [staffMobileNo]
+                     ,binareastaff.[area_id] as [areaId]
+                     ,binareastaff.[name] as [area]
+                     ,binareastaff.[latitude]
+                     ,binareastaff.[longitude]
+                     ,binareastaff.[staffId]
+                     ,binareastaff.[staffName]
+                     ,binareastaff.[staffMobileNo]
                      ,binstatus.[waste_level] as [level]
                      ,binstatus.[created] as [lastUpdated]
                      FROM (SELECT 
                               bin.*
                               ,area.[name]
                               ,area.[municipality_id]
+                              ,staff.[staff_id] as staffId
+                              ,staff.[name] as staffName
+                              ,staff.[mobile_no] as staffMobileNo
                               FROM [wms].[wmsuser].bin bin
                               JOIN [wms].[wmsuser].area area 
-                              ON bin.area_id = area.area_id) binarea
+                              ON bin.area_id = area.area_id
+                        JOIN [wms].[wmsuser].staff_details staff
+                        ON bin.staff_id = staff.staff_id) binareastaff
                         JOIN [wms].[wmsuser].municipality mun 
-                        ON binarea.municipality_id = mun.municipality_id
+                        ON binareastaff.municipality_id = mun.municipality_id
                         JOIN (SELECT status.*
                                  FROM [wms].[wmsuser].[bin_status] status
                                  JOIN 
@@ -35,8 +41,8 @@ exports.findAll = () => {
                                     ,MAX([created]) as [createdlatest]
                                     FROM [wms].[wmsuser].[bin_status] GROUP BY bin_id) statuslatest
                                  ON statuslatest.bin_id = status.bin_id AND statuslatest.createdlatest = status.created) binstatus
-                           ON binstatus.bin_id = binarea.bin_id
-                     ORDER BY binarea.bin_id`
+                           ON binstatus.bin_id = binareastaff.bin_id
+                     ORDER BY binareastaff.bin_id`
 
    return new Promise((resolve, reject) => {
       db.executeQuery(query)
@@ -47,26 +53,32 @@ exports.findAll = () => {
 
 exports.findByMunicipality = (municipalityId) => {
    const query = `SELECT 
-                      binarea.[bin_id] as id
-                     ,binarea.[municipality_id] as [municipalityId]
+                     binareastaff.[bin_id] as id
+                     ,binareastaff.[municipality_id] as [municipalityId]
                      ,mun.[name] as [municipality]
-                     ,binarea.[area_id] as [areaId]
-                     ,binarea.[name] as [area]
-                     ,binarea.[latitude]
-                     ,binarea.[longitude]
-                     ,binarea.[staff_name] as [staffName]
-                     ,binarea.[staff_mobile_no] as [staffMobileNo]
+                     ,binareastaff.[area_id] as [areaId]
+                     ,binareastaff.[name] as [area]
+                     ,binareastaff.[latitude]
+                     ,binareastaff.[longitude]
+                     ,binareastaff.[staffId]
+                     ,binareastaff.[staffName]
+                     ,binareastaff.[staffMobileNo]
                      ,binstatus.[waste_level] as [level]
                      ,binstatus.[created] as [lastUpdated]
                      FROM (SELECT 
                               bin.*
                               ,area.[name]
                               ,area.[municipality_id]
+                              ,staff.[staff_id] as staffId
+                              ,staff.[name] as staffName
+                              ,staff.[mobile_no] as staffMobileNo
                               FROM [wms].[wmsuser].bin bin
                               JOIN [wms].[wmsuser].area area 
-                              ON bin.area_id = area.area_id) binarea
+                              ON bin.area_id = area.area_id
+                        JOIN [wms].[wmsuser].staff_details staff
+                        ON bin.staff_id = staff.staff_id) binareastaff
                         JOIN [wms].[wmsuser].municipality mun 
-                        ON binarea.municipality_id = mun.municipality_id
+                        ON binareastaff.municipality_id = mun.municipality_id
                         JOIN (SELECT status.*
                                  FROM [wms].[wmsuser].[bin_status] status
                                  JOIN 
@@ -74,9 +86,9 @@ exports.findByMunicipality = (municipalityId) => {
                                     ,MAX([created]) as [createdlatest]
                                     FROM [wms].[wmsuser].[bin_status] GROUP BY bin_id) statuslatest
                                  ON statuslatest.bin_id = status.bin_id AND statuslatest.createdlatest = status.created) binstatus
-                           ON binstatus.bin_id = binarea.bin_id
-                     WHERE binarea.municipality_id = ${municipalityId}
-                     ORDER BY binarea.bin_id`
+                           ON binstatus.bin_id = binareastaff.bin_id
+                     WHERE binareastaff.municipality_id = ${municipalityId}
+                     ORDER BY binareastaff.bin_id`
 
    return new Promise((resolve, reject) => {
       db.executeQuery(query)
@@ -87,26 +99,32 @@ exports.findByMunicipality = (municipalityId) => {
 
 exports.findByMunicipalityAndArea = (municipalityId, areaId) => {
    const query = `SELECT 
-                      binarea.[bin_id] as id
-                     ,binarea.[municipality_id] as [municipalityId]
+                     binareastaff.[bin_id] as id
+                     ,binareastaff.[municipality_id] as [municipalityId]
                      ,mun.[name] as [municipality]
-                     ,binarea.[area_id] as [areaId]
-                     ,binarea.[name] as [area]
-                     ,binarea.[latitude]
-                     ,binarea.[longitude]
-                     ,binarea.[staff_name] as [staffName]
-                     ,binarea.[staff_mobile_no] as [staffMobileNo]
+                     ,binareastaff.[area_id] as [areaId]
+                     ,binareastaff.[name] as [area]
+                     ,binareastaff.[latitude]
+                     ,binareastaff.[longitude]
+                     ,binareastaff.[staffId]
+                     ,binareastaff.[staffName]
+                     ,binareastaff.[staffMobileNo]
                      ,binstatus.[waste_level] as [level]
                      ,binstatus.[created] as [lastUpdated]
                      FROM (SELECT 
                               bin.*
                               ,area.[name]
                               ,area.[municipality_id]
+                              ,staff.[staff_id] as staffId
+                              ,staff.[name] as staffName
+                              ,staff.[mobile_no] as staffMobileNo
                               FROM [wms].[wmsuser].bin bin
                               JOIN [wms].[wmsuser].area area 
-                              ON bin.area_id = area.area_id) binarea
+                              ON bin.area_id = area.area_id
+                        JOIN [wms].[wmsuser].staff_details staff
+                        ON bin.staff_id = staff.staff_id) binareastaff
                         JOIN [wms].[wmsuser].municipality mun 
-                        ON binarea.municipality_id = mun.municipality_id
+                        ON binareastaff.municipality_id = mun.municipality_id
                         JOIN (SELECT status.*
                                  FROM [wms].[wmsuser].[bin_status] status
                                  JOIN 
@@ -114,9 +132,9 @@ exports.findByMunicipalityAndArea = (municipalityId, areaId) => {
                                     ,MAX([created]) as [createdlatest]
                                     FROM [wms].[wmsuser].[bin_status] GROUP BY bin_id) statuslatest
                                  ON statuslatest.bin_id = status.bin_id AND statuslatest.createdlatest = status.created) binstatus
-                           ON binstatus.bin_id = binarea.bin_id
-                     WHERE binarea.municipality_id = ${municipalityId} AND binarea.area_id = ${areaId}
-                     ORDER BY binarea.bin_id`
+                           ON binstatus.bin_id = binareastaff.bin_id
+                     WHERE binareastaff.municipality_id = ${municipalityId} AND binareastaff.area_id = ${areaId}
+                     ORDER BY binareastaff.bin_id`
                      
    return new Promise((resolve, reject) => {
       db.executeQuery(query)

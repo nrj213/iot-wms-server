@@ -1,5 +1,5 @@
 /**
- * Router definition for bin related paths
+ * Router definition for user related paths
  */
 
 const express = require('express')

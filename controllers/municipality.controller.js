@@ -17,6 +17,7 @@ exports.getMunicipalityIdByAreaId = (req, res) => {
 
     if (isNaN(areaId)) {
         res.json(new ErrorResponse(MessageCodes.PARAMATER_TYPE_MISMATCH, 'Area ID passed is not of type integer'))
+        return
     }
 
     municipalityService.getMunicipalityIdByAreaId(areaId)
