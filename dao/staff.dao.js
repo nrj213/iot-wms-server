@@ -26,3 +26,29 @@ exports.findStaffById = (staffId) => {
             .catch(error => reject(new Exception('Failed to get staff information from DB', MessageCodes.DB_QUERY_FAILED)))
     })
 }
+
+exports.findAllStaff = () => {
+    const query = `SELECT staffdetails.[staff_id]
+                        ,staffdetails.[name]
+                        ,[address]
+                        ,[mobile_no]
+                        ,[date_of_joining]
+                        ,[date_of_leaving]
+                        ,userdetails.[username]
+                        ,userdetails.[password]
+                        ,statusinfo.[name] as status
+                        ,roleinfo.[name] as role
+                    FROM [wms].[wmsuser].[staff_details] staffdetails
+                    JOIN [wms].[wmsuser].[user] userdetails
+                    ON staffdetails.staff_id = userdetails.staff_id
+                    JOIN [wms].[wmsuser].[user_status] statusinfo
+                    ON userdetails.user_status_id = statusinfo.user_status_id
+                    JOIN [wms].[wmsuser].[user_role] roleinfo
+                    ON userdetails.user_role_id = roleinfo.user_role_id`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result.recordset))
+            .catch(error => reject(new Exception('Failed to get staff details from DB', MessageCodes.DB_QUERY_FAILED)))
+    })
+}

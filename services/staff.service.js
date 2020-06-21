@@ -18,3 +18,16 @@ exports.getStaffById = (staffId) => {
             .catch(err => reject(err))
     })
 }
+
+exports.getAllStaff = () => {
+    return new Promise((resolve, reject) => {
+        staffDao.findAllStaff()
+            .then(response => {
+                if (!response.length) {
+                    resolve(new ErrorResponse(MessageCodes.USER_NOT_FOUND, 'Staff details not found'))
+                }
+                resolve(new Response(response))
+            })
+            .catch(err => reject(err))
+    })
+}

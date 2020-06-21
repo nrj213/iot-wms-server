@@ -18,3 +18,9 @@ exports.getStaffById = (req, res) => {
         .then(data => res.json(data))
         .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
 }
+
+exports.getAllStaff = (req, res) => {
+    staffService.getAllStaff()
+        .then(data => res.json(data))
+        .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
+}
