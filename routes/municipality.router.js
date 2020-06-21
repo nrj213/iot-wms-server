@@ -9,5 +9,8 @@ var router = express.Router()
 
 router.get('/', municipalityController.getAllMunicipalities)
 router.get('/:areaId', municipalityController.getMunicipalityIdByAreaId)
+router.post('', municipalityController.addMunicipality)
+router.put('', municipalityController.editMunicipality)
+router.delete('', municipalityController.deleteMunicipality)
 
 module.exports = router

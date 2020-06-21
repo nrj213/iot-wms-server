@@ -24,3 +24,45 @@ exports.getMunicipalityIdByAreaId = (req, res) => {
         .then(data => res.json(data))
         .catch(err => res.json(new ErrorResponseerr.errorCode, err.errorMessage, err.error))
 }
+
+exports.addMunicipality = (req, res) => {
+    const body = req.body
+    const name = body['name']
+
+    if (name == undefined) {
+        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing new municipality name in request body'))
+        return
+    }
+
+    municipalityService.addMunicipality(name)
+        .then(data => res.json(data))
+        .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
+}
+
+exports.editMunicipality = (req, res) => {
+    const body = req.body
+    const id = body['id']
+    const name = body['name']
+
+    if (name == undefined || id == undefined) {
+        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing municipality ID/name in request body'))
+        return
+    }
+
+    municipalityService.editMunicipality(id, name)
+        .then(data => res.json(data))
+        .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
+}
+
+exports.deleteMunicipality = (req, res) => {
+    const id = req.query.id
+
+    if (id == undefined) {
+        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing municipality ID in request'))
+        return
+    }
+
+    municipalityService.deleteMunicipality(id)
+        .then(data => res.json(data))
+        .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
+}

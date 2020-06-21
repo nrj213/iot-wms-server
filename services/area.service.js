@@ -12,3 +12,27 @@ exports.getAreasByMunicipality = (municipalityId) => {
             .catch(err => reject(err))
     })
 }
+
+exports.addArea = (name, municipality_id) => {
+    return new Promise((resolve, reject) => {
+        areaDao.create(name, municipality_id)
+            .then(response => resolve(new Response(response)))
+            .catch(err => reject(err))
+    })
+}
+
+exports.editArea = (id, name) => {
+    return new Promise((resolve, reject) => {
+        areaDao.update(id, name)
+            .then(response => resolve(new Response(response)))
+            .catch(err => reject(err))
+    })
+}
+
+exports.deleteArea = (id) => {
+    return new Promise((resolve, reject) => {
+        areaDao.delete(id)
+            .then(response => resolve(new Response(response)))
+            .catch(err => reject(err))
+    })
+}
