@@ -5,6 +5,8 @@ const municipalityRouter = require('./routes/municipality.router')
 const areaRouter = require('./routes/area.router')
 const collectionRecordRouter = require('./routes/collectionrecord.router')
 const staffRouter = require('./routes/staff.router')
+const roleRouter = require('./routes/role.router')
+const statusRouter = require('./routes/status.router')
 
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -35,6 +37,8 @@ app.use('/wms/municipalities', municipalityRouter)
 app.use('/wms/areas',areaRouter)
 app.use('/wms/collectionrecords', collectionRecordRouter)
 app.use('/wms/staff', staffRouter)
+app.use('/wms/roles', roleRouter)
+app.use('/wms/status', statusRouter)
 
 /**
  * Managing unhandled rejections

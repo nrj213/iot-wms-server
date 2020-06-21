@@ -19,8 +19,14 @@ exports.getStaffById = (req, res) => {
         .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
 }
 
-exports.getAllStaff = (req, res) => {
-    staffService.getAllStaff()
+exports.getAllStaffByAreaId = (req, res) => {
+    const areaId = req.query.areaId
+
+    if (isNaN(areaId)) {
+        res.json(new ErrorResponse(MessageCodes.PARAMATER_TYPE_MISMATCH, 'Area ID passed is not of type integer'))
+        return
+    }
+    staffService.getAllStaffByAreaId(areaId)
         .then(data => res.json(data))
         .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
 }

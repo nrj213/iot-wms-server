@@ -1,5 +1,5 @@
 /**
- * Service methods for handling bin related actions
+ * Service methods for handling municipality related actions
  */
 
 const municipalityDao = require('../dao/municipality.dao')

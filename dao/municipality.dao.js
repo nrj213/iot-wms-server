@@ -1,5 +1,5 @@
 /**
- * Methods for handling bin related DB operations
+ * Methods for handling municipality related DB operations
  */
 
 const db = require('../config/db')

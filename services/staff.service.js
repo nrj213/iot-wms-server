@@ -19,15 +19,10 @@ exports.getStaffById = (staffId) => {
     })
 }
 
-exports.getAllStaff = () => {
+exports.getAllStaffByAreaId = (areaId) => {
     return new Promise((resolve, reject) => {
-        staffDao.findAllStaff()
-            .then(response => {
-                if (!response.length) {
-                    resolve(new ErrorResponse(MessageCodes.USER_NOT_FOUND, 'Staff details not found'))
-                }
-                resolve(new Response(response))
-            })
+        staffDao.findAllStaffByAreaId(areaId)
+            .then(response => resolve(new Response(response)))
             .catch(err => reject(err))
     })
 }

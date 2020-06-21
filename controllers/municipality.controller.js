@@ -1,5 +1,5 @@
 /**
- * Controller methods for bin related actions
+ * Controller methods for municipality related actions
  */
 
 const municipalityService = require('../services/municipality.service')
