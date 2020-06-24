@@ -31,3 +31,24 @@ exports.findUserByUsernameAndPassword = (username, password) => {
             .catch(error => reject(new Exception('Failed to get user information from DB', MessageCodes.DB_QUERY_FAILED)))
     })
 }
+
+exports.create = (user) => {
+    const query = `INSERT INTO [wmsuser].[user]
+                                ([username]
+                                ,[password]
+                                ,[user_status_id]
+                                ,[user_role_id]
+                                ,[staff_id])
+                            VALUES
+                                ('${user.username}'
+                                ,'${user.password}'
+                                ,${user.statusId}
+                                ,${roleId}
+                                ,${user.staffId})`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result.recordset))
+            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED)))
+    })
+}

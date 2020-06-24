@@ -59,3 +59,26 @@ exports.findAllStaffByAreaId = (areaId) => {
             .catch(error => reject(new Exception('Failed to get staff details from DB', MessageCodes.DB_QUERY_FAILED)))
     })
 }
+
+exports.create = (user) => {
+    const query = `INSERT INTO [wmsuser].[staff_details]
+                                ([name]
+                                ,[address]
+                                ,[mobile_no]
+                                ,[area_id]
+                                ,[date_of_joining]
+                                ,[date_of_leaving])
+                            VALUES
+                                (<name, varchar(150),>
+                                ,<address, varchar(250),>
+                                ,<mobile_no, varchar(15),>
+                                ,<area_id, int,>
+                                ,<date_of_joining, date,>
+                                ,<date_of_leaving, date,>)`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result.recordset))
+            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED)))
+    })
+}
