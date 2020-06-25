@@ -7,7 +7,7 @@ const { MessageCodes } = require('../utils/constants')
 const { Exception } = require('../payload/exception')
 
 exports.findStaffById = (staffId) => {
-    const query = `SELECT [staff_id] as staffId
+    const query = `SELECT staff.[staff_id] as staffId
                         ,staff.[name]
                         ,[address]
                         ,[mobile_no] as mobileNo
@@ -18,7 +18,9 @@ exports.findStaffById = (staffId) => {
                     FROM [wms].[wmsuser].[staff_details] staff
                     JOIN [wms].[wmsuser].[area] area
                     ON staff.area_id = area.area_id
-                    WHERE staff.staff_id = ${staffId}`
+                    JOIN [wms].[wmsuser].[user] userinfo
+					ON staff.staff_id = userinfo.staff_id
+					WHERE staff.staff_id = ${staffId} AND userinfo.user_status_id = 1`
 
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
@@ -81,7 +83,7 @@ exports.create = (user) => {
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
             .then(result => resolve(result))
-            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED, error)))
+            .catch(error => reject(new Exception('Failed to add staff information to DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
 
@@ -93,5 +95,22 @@ exports.delete = (staffId) => {
         db.executeQuery(query)
             .then(result => resolve(result))
             .catch(error => reject(new Exception('Failed to delete staff details from DB', MessageCodes.DB_QUERY_FAILED, error)))
+    })
+}
+
+exports.update = (user) => {
+    const query = `UPDATE [wmsuser].[staff_details]
+                            SET [name] = '${user.name}'
+                            ,[address] = '${user.address}'
+                            ,[mobile_no] = '${user.mobileNo}'
+                            ,[area_id] = ${user.areaId}
+                            ,[date_of_joining] = '${user.dateOfJoining}'
+                            ,[date_of_leaving] = ${user.dateOfLeaving ? "'" + user.dateOfLeaving + "'" : null}
+                        WHERE staff_id = ${user.staffId}`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result))
+            .catch(error => reject(new Exception('Failed to update staff information in DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }

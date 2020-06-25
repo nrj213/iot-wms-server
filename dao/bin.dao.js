@@ -166,3 +166,86 @@ exports.markCollection = (binId, staffId) => {
          .catch(error => reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error)))
    })
 }
+
+exports.create = (bin) => {
+   const query = `INSERT INTO [wmsuser].[bin]
+                                 ([area_id]
+                                 ,[latitude]
+                                 ,[longitude]
+                                 ,[staff_id])
+                              OUTPUT inserted.bin_id as binId
+                              VALUES
+                                 (${bin.areaId}
+                                 ,${bin.latitude}
+                                 ,${bin.longitude}
+                                 ,${bin.staffId})`
+
+   return new Promise((resolve, reject) => {
+       db.executeQuery(query)
+           .then(result => resolve(result))
+           .catch(error => reject(new Exception('Failed to add bin information to DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}
+
+exports.addStatus = (binId, level) => {
+   const query = `INSERT INTO [wmsuser].[bin_status]
+                              ([bin_id]
+                              ,[waste_level])
+                           VALUES
+                              (${binId}
+                              ,${level})`
+
+   return new Promise((resolve, reject) => {
+       db.executeQuery(query)
+           .then(result => resolve(result))
+           .catch(error => reject(new Exception('Failed to add bin level status to DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}
+
+exports.delete = (binId) => {
+   const query = `DELETE FROM [wmsuser].[bin]
+                               WHERE bin_id = ${binId}`
+
+   return new Promise((resolve, reject) => {
+       db.executeQuery(query)
+           .then(result => resolve(result))
+           .catch(error => reject(new Exception('Failed to delete bin information from DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}
+
+exports.deleteStatusRecords = (binId) => {
+   const query = `DELETE FROM [wmsuser].[bin_status]
+                               WHERE bin_id = ${binId}`
+
+   return new Promise((resolve, reject) => {
+       db.executeQuery(query)
+           .then(result => resolve(result))
+           .catch(error => reject(new Exception('Failed to delete bin status information from DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}
+
+exports.deleteCollectionRecords = (binId) => {
+   const query = `DELETE FROM [wmsuser].[collection_records]
+                               WHERE bin_id = ${binId}`
+
+   return new Promise((resolve, reject) => {
+       db.executeQuery(query)
+           .then(result => resolve(result))
+           .catch(error => reject(new Exception('Failed to delete bin collection information from DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}
+
+exports.update = (bin) => {
+   const query = `UPDATE [wmsuser].[bin]
+                           SET [area_id] = '${bin.areaId}'
+                           ,[latitude] = '${bin.latitude}'
+                           ,[longitude] = ${bin.longitude}
+                           ,[staff_id] = ${bin.staffId}
+                       WHERE bin_id = ${bin.id}`
+
+   return new Promise((resolve, reject) => {
+       db.executeQuery(query)
+           .then(result => resolve(result))
+           .catch(error => reject(new Exception('Failed to update bin information in DB', MessageCodes.DB_QUERY_FAILED, error)))
+   })
+}

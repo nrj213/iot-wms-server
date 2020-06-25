@@ -11,5 +11,9 @@ router.get('/', binController.getAllBins)
 router.get('/:municipality', binController.getBinsByMunicipality)
 router.get('/:municipality/:area', binController.getBinsByMunicipalityAndArea)
 router.put('/collected', binController.markCollection)
+router.post('', binController.create)
+router.put('', binController.update)
+router.delete('', binController.delete)
+router.post('/level', binController.modifyLevel)
 
 module.exports = router

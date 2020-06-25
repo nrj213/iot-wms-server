@@ -61,3 +61,19 @@ exports.delete = (staffId, userId) => {
             .catch(error => reject(new Exception('Failed to delete staff information from DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
+
+exports.update = (user) => {
+    return new Promise((resolve, reject) => {
+        userDao.update(user)
+            .then(response => {
+                if (response['rowsAffected'][0]) {
+                    staffDao.update(user)
+                        .then(result => resolve(new Response(result['rowsAffected'][0])))
+                        .catch(error => reject(new Exception('Failed to update staff information in DB', MessageCodes.DB_QUERY_FAILED, error)))
+                } else {
+                    reject(new Exception('Failed to update staff information in DB', MessageCodes.DB_QUERY_FAILED))
+                }
+            })
+            .catch(error => reject(new Exception('Failed to update staff information in DB', MessageCodes.DB_QUERY_FAILED, error)))
+    })
+}

@@ -36,7 +36,7 @@ exports.create = (req, res) => {
     const user = req.body
 
     if (Object.keys(user).length == 0) {
-        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing user details'))
+        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing details in request'))
         return
     }
     
@@ -46,7 +46,6 @@ exports.create = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    console.log(req.query)
     const staffId = req.query.staffId
     const userId = req.query.userId
 
@@ -56,6 +55,19 @@ exports.delete = (req, res) => {
     }
 
     staffService.delete(staffId, userId)
+        .then(data => res.json(data))
+        .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
+}
+
+exports.update = (req, res) => {
+    const user = req.body
+
+    if (Object.keys(user).length == 0) {
+        res.json(new ErrorResponse(MessageCodes.MISSING_PARAMETERS, 'Missing details in request'))
+        return
+    }
+    
+    staffService.update(user)
         .then(data => res.json(data))
         .catch(err => res.json(new ErrorResponse(err.errorCode, err.errorMessage, err.error)))
 }

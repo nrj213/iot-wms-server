@@ -60,6 +60,21 @@ exports.delete = (userId) => {
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
             .then(result => resolve(result))
-            .catch(error => reject(new Exception('Failed to delete user details from DB', MessageCodes.DB_QUERY_FAILED, error)))
+            .catch(error => reject(new Exception('Failed to delete user information from DB', MessageCodes.DB_QUERY_FAILED, error)))
+    })
+}
+
+exports.update = (user) => {
+    const query = `UPDATE [wmsuser].[user]
+                            SET [username] = '${user.username}'
+                            ,[password] = '${user.password}'
+                            ,[user_status_id] = ${user.statusId}
+                            ,[user_role_id] = ${user.roleId}
+                        WHERE user_id = ${user.userId}`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result))
+            .catch(error => reject(new Exception('Failed to update user information in DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
