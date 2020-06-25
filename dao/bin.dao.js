@@ -160,7 +160,7 @@ exports.markCollection = (binId, staffId) => {
                      .then(result => resolve(result['rowsAffected'][0]))
                      .catch(error => reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error)))
             } else {
-               reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error))
+               reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED))
             }
          })
          .catch(error => reject(new Exception('Failed to add collection information to DB', MessageCodes.DB_QUERY_FAILED, error)))

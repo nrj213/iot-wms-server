@@ -23,7 +23,7 @@ exports.findStaffById = (staffId) => {
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
             .then(result => resolve(result.recordset))
-            .catch(error => reject(new Exception('Failed to get staff information from DB', MessageCodes.DB_QUERY_FAILED)))
+            .catch(error => reject(new Exception('Failed to get staff information from DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
 
@@ -36,6 +36,7 @@ exports.findAllStaffByAreaId = (areaId) => {
                         ,areainfo.[name] as areaName
                         ,[date_of_joining] as dateOfJoining
                         ,[date_of_leaving] as dateOfLeaving
+                        ,userdetails.[user_id] as userId
                         ,userdetails.[username]
                         ,userdetails.[password]
                         ,userdetails.[user_status_id] as statusId
@@ -56,7 +57,7 @@ exports.findAllStaffByAreaId = (areaId) => {
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
             .then(result => resolve(result.recordset))
-            .catch(error => reject(new Exception('Failed to get staff details from DB', MessageCodes.DB_QUERY_FAILED)))
+            .catch(error => reject(new Exception('Failed to get staff details from DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
 
@@ -68,17 +69,29 @@ exports.create = (user) => {
                                 ,[area_id]
                                 ,[date_of_joining]
                                 ,[date_of_leaving])
+                            OUTPUT inserted.staff_id as staffId
                             VALUES
-                                (<name, varchar(150),>
-                                ,<address, varchar(250),>
-                                ,<mobile_no, varchar(15),>
-                                ,<area_id, int,>
-                                ,<date_of_joining, date,>
-                                ,<date_of_leaving, date,>)`
+                                ('${user.name}'
+                                ,'${user.address}'
+                                ,'${user.mobileNo}'
+                                ,${user.areaId}
+                                ,'${user.dateOfJoining}'
+                                ,${user.dateOfLeaving ? "'" + user.dateOfLeaving + "'" : null})`
 
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
-            .then(result => resolve(result.recordset))
-            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED)))
+            .then(result => resolve(result))
+            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED, error)))
+    })
+}
+
+exports.delete = (staffId) => {
+    const query = `DELETE FROM [wmsuser].[staff_details]
+                                WHERE staff_id = ${staffId}`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result))
+            .catch(error => reject(new Exception('Failed to delete staff details from DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }

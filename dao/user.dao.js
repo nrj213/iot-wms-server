@@ -28,7 +28,7 @@ exports.findUserByUsernameAndPassword = (username, password) => {
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
             .then(result => resolve(result.recordset))
-            .catch(error => reject(new Exception('Failed to get user information from DB', MessageCodes.DB_QUERY_FAILED)))
+            .catch(error => reject(new Exception('Failed to get user information from DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
 
@@ -43,12 +43,23 @@ exports.create = (user) => {
                                 ('${user.username}'
                                 ,'${user.password}'
                                 ,${user.statusId}
-                                ,${roleId}
+                                ,${user.roleId}
                                 ,${user.staffId})`
 
     return new Promise((resolve, reject) => {
         db.executeQuery(query)
-            .then(result => resolve(result.recordset))
-            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED)))
+            .then(result => resolve(result))
+            .catch(error => reject(new Exception('Failed to add user information to DB', MessageCodes.DB_QUERY_FAILED, error)))
+    })
+}
+
+exports.delete = (userId) => {
+    const query = `DELETE FROM [wmsuser].[user]
+                                WHERE user_id = ${userId}`
+
+    return new Promise((resolve, reject) => {
+        db.executeQuery(query)
+            .then(result => resolve(result))
+            .catch(error => reject(new Exception('Failed to delete user details from DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
 }
