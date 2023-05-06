@@ -6,6 +6,8 @@ const binDao = require('../dao/bin.dao')
 const { Response } = require('../payload/response')
 const { Exception } = require('../payload/exception')
 const { MessageCodes } = require('../utils/constants')
+const cron = require('node-cron')
+const axios = require('axios')
 
 exports.getAllBins = () => {
     return new Promise((resolve, reject) => {
@@ -91,4 +93,36 @@ exports.modifyLevel = (bin) => {
             .then(result => resolve(new Response(result['rowsAffected'][0])))
             .catch(error => reject(new Exception('Failed to add bin level information to DB', MessageCodes.DB_QUERY_FAILED, error)))
     })
+}
+
+exports.initiateJob = () => {
+    console.log("Bin level update job started")
+
+    const iotServerUrl = 'https://api.thingspeak.com/channels/2129412/fields/1/last.txt?api_key=1VRTIYG45WM90X32'
+    const binId = 21
+    //  ┌────────────── second (optional)
+    //  │ ┌──────────── minute
+    //  │ │ ┌────────── hour
+    //  │ │ │ ┌──────── day of month
+    //  │ │ │ │ ┌────── month
+    //  │ │ │ │ │ ┌──── day of week
+    //  │ │ │ │ │ │
+    //  │ │ │ │ │ │
+    //  * * * * * *
+    cron.schedule('29,59 * * * * *', () => {
+        axios.get(iotServerUrl).then(res => {
+            if (res.data) {
+                console.log(`Recieved level ${res.data} for bin ID ${binId}`)
+                let level = res.data >= 0 ? res.data : 0;
+
+                binDao.addStatus(binId, level)
+                    .then(result => {
+                        if (result['rowsAffected'][0]) {
+                            console.log(`Successfully updated level to ${level} for bin ID ${binId}`)
+                        }
+                    })
+                    .catch(error => console.log('Failed to add bin level information to DB', MessageCodes.DB_QUERY_FAILED, error))
+            }
+        });
+    });
 }

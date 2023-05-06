@@ -7,6 +7,7 @@ const collectionRecordRouter = require('./routes/collectionrecord.router')
 const staffRouter = require('./routes/staff.router')
 const roleRouter = require('./routes/role.router')
 const statusRouter = require('./routes/status.router')
+const { initiateJob } = require('./services/bin.service')
 
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -53,3 +54,5 @@ process.on('unhandledRejection', function(err) {
 app.listen(app.get('port'), () => {
     console.log("App is running at http://localhost:%d in %s mode", app.get('port'), app.get('env'));
 })
+
+initiateJob()
